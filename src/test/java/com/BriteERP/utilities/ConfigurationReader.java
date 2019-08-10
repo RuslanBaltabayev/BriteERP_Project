@@ -5,27 +5,22 @@ import java.util.Properties;
 
 public class ConfigurationReader {
 
-    private static Properties configFile;
+    private static Properties pro;
 
     static {
+        String path = "configuration.properties";
         try {
-            //path to our .properties file
-            //MIGHT BE WRONG PATH HERE, PAY ATTENTION
-            String path = "configuration.properties";
-            //we create object of input stream to access file
-            System.out.println(path);
-            FileInputStream input = new FileInputStream(path);
-            //initialize configFile
-            configFile = new Properties();
-            //load properties file
-            configFile.load(input);
-        } catch (Exception e){
-            e.printStackTrace();
+            FileInputStream file = new FileInputStream(path);
+            pro=new Properties();
+            pro.load(file);
+            file.close();
+        } catch (Exception e) {
+            System.out.println("Path: "+path+"-not exist!");
         }
     }
 
     public static String getProperty(String key){
-        return configFile.getProperty(key);
+        return pro.getProperty(key);
     }
 
 }

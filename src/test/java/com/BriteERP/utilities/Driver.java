@@ -5,31 +5,42 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import java.util.concurrent.TimeUnit;
+
 public class Driver {
 
-    public static WebDriver driver;
+  private static WebDriver driver;
 
-    public static WebDriver getDriver(){
-        if(driver==null){
-            if(ConfigurationReader.getProperty("browser").equals("chrome")){
-                WebDriverManager.chromedriver().setup();
-                driver=new ChromeDriver();
-            }else if(ConfigurationReader.getProperty("browser").equals("firefox")){
-                WebDriverManager.firefoxdriver().setup();
-                driver=new FirefoxDriver();
-            }else{
-                throw new RuntimeException("Wrong browser name!");
+  private Driver(){}
+
+   public static WebDriver getDriver(){
+        if (driver == null){
+            switch (ConfigurationReader.getProperty("browser")) {
+                case "chrome":
+                    WebDriverManager.chromedriver().setup();
+                    driver=new ChromeDriver();
+                    break;
+                case "firefox":
+                    WebDriverManager.firefoxdriver().setup();
+                    driver=new FirefoxDriver();
+                    break;
+                    default:
+                        System.out.println("We use only chrome and firefox as an testing browser");
             }
 
-        }
+    }
+        driver.manage().timeouts().implicitlyWait(Long.valueOf(ConfigurationReader.getProperty("imlicitwait")), TimeUnit.SECONDS);
+        driver.manage().window().maximize();
+        driver.manage().timeouts().pageLoadTimeout(Long.valueOf(ConfigurationReader.getProperty("implicitwait")),TimeUnit.SECONDS);
         return driver;
+
     }
 
     public static void closeDriver(){
-            if(driver!=null){
-                driver.quit();
-                driver = null;
-            }
+       if(driver!=null){
+           driver.quit();
+           driver=null;
+       }
     }
 
 
